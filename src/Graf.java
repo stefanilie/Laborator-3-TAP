@@ -1,4 +1,3 @@
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
@@ -15,7 +14,6 @@ public class Graf
 	 */
 	public static void main(String[] args)
 	{
-		int nIsRead;
 		File file = new File("elodia.txt");
 		try
 		{
@@ -26,9 +24,11 @@ public class Graf
 			while(sc.hasNextLine())
 			{
 				ArrayList<Integer> arrTemp = new ArrayList<Integer>();
-				while(sc.next() != "\n")
+				Object isRead = sc.next();
+				while(isRead != "\n")
 				{
-					arrTemp.add(sc.nextInt());
+					String temp = isRead.toString();
+					arrTemp.add(Integer.parseInt(temp));
 				}
 				arrLine = arrTemp;
 				arrColum.add(arrLine);
@@ -41,7 +41,7 @@ public class Graf
 			 */
 			for (ArrayList<Integer> nParser : arrColum)
 			{
-				for (Integer nNumber : arrLine) 
+				for (Integer nNumber : nParser) 
 				{
 					System.out.println(arrLine.indexOf(nNumber) + ": ");
 					if(nNumber != arrLine.get(arrLine.size()-1))
@@ -58,9 +58,6 @@ public class Graf
 		catch (FileNotFoundException ex)
 		{
 			System.out.println(ex);
-		}
-		}
-		
-		
-
+		}	
 	}
+}
