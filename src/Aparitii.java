@@ -3,6 +3,8 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import javax.swing.text.html.parser.Entity;
+
 public class Aparitii {
 
 	/**
@@ -10,7 +12,7 @@ public class Aparitii {
 	 */
 	public static void main(String[] args) 
 	{
-		File file = new File("elodia.txt");
+		File file = new File("moloz.txt");
 		try
 		{
 			Scanner sc = new Scanner(file);

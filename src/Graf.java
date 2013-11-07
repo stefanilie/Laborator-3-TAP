@@ -31,6 +31,51 @@ public class Graf
 		return arrToReturn;
 	}
 	
+	
+	public static int nextElement(int nToSearch, ArrayList<Integer> arrList, HashMap<Integer, Boolean> hash)
+	{
+		int nToReturn = 0;
+		
+		for (Integer integer : arrList)
+		{
+			
+		}
+		
+		return nToReturn;
+	}
+	
+	public static ArrayList<Integer> DF (ArrayList<ArrayList<Integer>> arrParams)
+	{
+		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
+		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
+		
+		for (ArrayList<Integer> list : arrParams)
+		{
+			hash.put(arrParams.indexOf(list) + 1, true);
+			arrToReturn.add(arrParams.indexOf(list));
+			for (Integer integer : list) 
+			{
+				if(hash.containsKey(integer))
+				{
+					if(hash.get(integer))
+					{
+						hash.put(integer, true);
+						arrToReturn.add(integer);
+					}
+				}
+				else
+				{
+					hash.put(integer, true);
+					arrToReturn.add(integer);
+				}
+				
+			}
+			
+		}
+		
+		return arrToReturn;
+	}
+	
 	/**
 	 * @param args
 	 * The input file will contain on the first line the nodes that connect to the first one
