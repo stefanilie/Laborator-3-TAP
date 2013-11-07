@@ -1,12 +1,36 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.awt.List;
 import java.io.File;
 import java.io.FileNotFoundException;
 
 
 public class Graf 
-{
-
+{	
+	
+	public static ArrayList<Integer> BF (ArrayList<ArrayList<Integer>> arrParam)
+	{
+		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
+		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
+		
+		for (Integer integer : arrParam.get(0)) 
+		{
+			arrToReturn.add(integer);
+			hash.put(integer, true);
+		}
+		
+		for (Integer parser : arrToReturn)
+		{
+			for (Integer integer : arrParam.get(parser - 1))
+			{
+				if(!hash.get(integer))
+					arrToReturn.add(integer);
+			}
+		}
+		return arrToReturn;
+	}
+	
 	/**
 	 * @param args
 	 * The input file will contain on the first line the nodes that connect to the first one
@@ -20,44 +44,45 @@ public class Graf
 			Scanner sc = new Scanner(file);
 			ArrayList<ArrayList<Integer>> arrColum = new ArrayList<ArrayList<Integer>>();
 			ArrayList<Integer> arrLine = new ArrayList<Integer>();
+			boolean hasNextLine = sc.hasNextLine();
 			
-			while(sc.hasNextLine())
+			while(hasNextLine)
 			{
-				ArrayList<Integer> arrTemp = new ArrayList<Integer>();
-				Object isRead = sc.next();
-				while(isRead != "\n")
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				int isRead = sc.nextInt();
+				temp.clear();
+				while(isRead != 0)
 				{
-					String temp = isRead.toString();
-					arrTemp.add(Integer.parseInt(temp));
+					System.out.println(isRead);
+					temp.add(isRead);
+					isRead = sc.nextInt();
 				}
-				arrLine = arrTemp;
+				System.out.println("ArrTemp:" + temp);
+				arrLine = temp;
+				System.out.println("Arrline: " + arrLine);
 				arrColum.add(arrLine);
-				sc.nextLine();
+				System.out.println("ArrColumn" + arrColum);
+				hasNextLine = sc.hasNextLine();
 			}
 			
-			
+			int nCounter = 1;
 			/**
 			 * This prints the graph.
 			 */
 			for (ArrayList<Integer> nParser : arrColum)
 			{
-				for (Integer nNumber : nParser) 
-				{
-					System.out.println(arrLine.indexOf(nNumber) + ": ");
-					if(nNumber != arrLine.get(arrLine.size()-1))
-					{
-						System.out.println(nNumber + "->");
-					}
-					else 
-					{
-						System.out.println(nNumber);
-					}
-				}
+				System.out.print(nCounter + ": ");
+				System.out.print(nParser);
+				nCounter++;
+				System.out.println();
 			}
+			
+			System.out.println(BF(arrColum));
 		}
 		catch (FileNotFoundException ex)
 		{
 			System.out.println(ex);
-		}	
+		}
+		
 	}
 }
