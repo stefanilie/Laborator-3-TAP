@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.awt.List;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -9,26 +8,73 @@ import java.io.FileNotFoundException;
 public class Graf 
 {	
 	
-	public static ArrayList<Integer> BF (ArrayList<ArrayList<Integer>> arrParam)
+	public static ArrayList<Integer> BF (ArrayList<ArrayList<Integer>> arrParam, ArrayList<Integer> arrResult, boolean bFirstWave,
+			int nStartIndex, HashMap<Integer, Boolean> hash)
 	{
+		if(bFirstWave)
+		{
+			//adauga toti fratii nodului de start
+			for (Integer integer : arrParam.get(nStartIndex - 1)) 
+			{
+				arrResult.add(integer);
+				hash.put(integer, true);
+			}
+		}
+		else
+		{
+			for (Integer parser : arrResult) 
+			{
+				for (Integer integer : arrParam.get(parser - 1))
+				{
+					if(!hash.containsKey(integer))
+					{
+						hash.put(integer, true);
+						arrResult
+						//TODO vezi si tu aici care'i baiu' ca cam faci aceeasi treaba ca mai jos
+						//halal refactoring
+						//#rudarel
+					}
+				}
+			}
+		}
+		/*
 		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
 		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
+		ArrayList<Integer> arrTemp = new ArrayList<Integer>();
 		
+		// Adds to the return list the nodes adiacent to the first node
+		// TODO add start node feature
 		for (Integer integer : arrParam.get(0)) 
 		{
 			arrToReturn.add(integer);
 			hash.put(integer, true);
 		}
 		
+		System.out.println("\n\nHash:" + hash);
+		
+		//this passes through all the arraylists of the matrice
 		for (Integer parser : arrToReturn)
 		{
+			arrTemp.clear();
 			for (Integer integer : arrParam.get(parser - 1))
 			{
-				if(!hash.get(integer))
-					arrToReturn.add(integer);
+				if(!hash.containsKey(integer))
+				{
+				
+					arrTemp.add(integer);
+					//TODO nu poa sa faca recursiv aici, cand ii atribui
+					// pe arrReturn, foreachu de rahat din java
+					//nu permite modificarea lui
+					//refactoring maine la prima ora
+					//#zacusca
+					//faci prumu val cu return si tot ce e in return cu 
+					hash.put(integer, true);
+				}
 			}
+			System.out.println("Pentru parser = " + parser + " arrReturn = " + arrToReturn + " iar hash : " + hash);
 		}
 		return arrToReturn;
+		*/
 	}
 	
 	
@@ -44,13 +90,14 @@ public class Graf
 		return nToReturn;
 	}
 	
-	public static ArrayList<Integer> DF (ArrayList<ArrayList<Integer>> arrParams)
+	public static ArrayList<Integer> DF (ArrayList<ArrayList<Integer>> arrParams, int nStartNode)
 	{
 		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
 		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
 		
 		for (ArrayList<Integer> list : arrParams)
 		{
+			// vizitez pe primul si il adaug la return
 			hash.put(arrParams.indexOf(list) + 1, true);
 			arrToReturn.add(arrParams.indexOf(list));
 			for (Integer integer : list) 
@@ -109,6 +156,8 @@ public class Graf
 				System.out.println("ArrColumn" + arrColum);
 				hasNextLine = sc.hasNextLine();
 			}
+			
+			sc.close();
 			
 			int nCounter = 1;
 			/**
