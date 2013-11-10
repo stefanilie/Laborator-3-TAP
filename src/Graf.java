@@ -125,9 +125,25 @@ public class Graf
 						//also if the hash doesn't refresh here, refresh it here manually.
 					}
 				}
-				if(hash.containsValue(false))
+				if(hash.containsValue(false) && arrFinalResult != arrFirstWave)
 				{
 					arrFirstWave = arrFinalResult;
+				}
+				else if(hash.containsValue(false))
+				{
+					for (Integer intr : hash.keySet())
+					{
+							if(hash.get(intr) == false)
+							{
+								temp.clear();
+								temp = BF(arrColum.get(intr - 1), false, hash);
+							}
+							for (Integer aux : temp)
+							{
+								arrFinalResult.add(aux);
+								//also if the hash doesn't refresh here, refresh it here manually.
+							}  
+					}
 				}
 				else
 				{
