@@ -3,126 +3,45 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 
 
 public class Graf 
-{	
-	
-	public static ArrayList<Integer> BF (ArrayList<ArrayList<Integer>> arrParam, ArrayList<Integer> arrResult, boolean bFirstWave,
-			int nStartIndex, HashMap<Integer, Boolean> hash)
+{
+	/**
+	 * This function calculates the neighbors of the provided node.
+	 * @param arrParams All the neighbors of the node.
+	 * @param bStartNode True if if the start node of the BF or false if else.
+	 * @return
+	 */
+	public static ArrayList<Integer> BF (ArrayList<Integer> arrParams, boolean bStartNode, HashMap<Integer, Boolean> hash)
 	{
-		if(bFirstWave)
+		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
+		
+		//this adds all the neighbors of the start node.
+		if(bStartNode)
 		{
-			//adauga toti fratii nodului de start
-			for (Integer integer : arrParam.get(nStartIndex - 1)) 
+			for (Integer integer : arrParams)
 			{
-				arrResult.add(integer);
+				arrToReturn.add(integer);
 				hash.put(integer, true);
 			}
 		}
 		else
 		{
-			for (Integer parser : arrResult) 
-			{
-				for (Integer integer : arrParam.get(parser - 1))
-				{
-					if(!hash.containsKey(integer))
-					{
-						hash.put(integer, true);
-						arrResult
-						//TODO vezi si tu aici care'i baiu' ca cam faci aceeasi treaba ca mai jos
-						//halal refactoring
-						//#rudarel
-					}
-				}
-			}
-		}
-		/*
-		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
-		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
-		ArrayList<Integer> arrTemp = new ArrayList<Integer>();
-		
-		// Adds to the return list the nodes adiacent to the first node
-		// TODO add start node feature
-		for (Integer integer : arrParam.get(0)) 
-		{
-			arrToReturn.add(integer);
-			hash.put(integer, true);
-		}
-		
-		System.out.println("\n\nHash:" + hash);
-		
-		//this passes through all the arraylists of the matrice
-		for (Integer parser : arrToReturn)
-		{
-			arrTemp.clear();
-			for (Integer integer : arrParam.get(parser - 1))
+			for (Integer integer : arrParams)
 			{
 				if(!hash.containsKey(integer))
-				{
-				
-					arrTemp.add(integer);
-					//TODO nu poa sa faca recursiv aici, cand ii atribui
-					// pe arrReturn, foreachu de rahat din java
-					//nu permite modificarea lui
-					//refactoring maine la prima ora
-					//#zacusca
-					//faci prumu val cu return si tot ce e in return cu 
-					hash.put(integer, true);
-				}
-			}
-			System.out.println("Pentru parser = " + parser + " arrReturn = " + arrToReturn + " iar hash : " + hash);
-		}
-		return arrToReturn;
-		*/
-	}
-	
-	
-	public static int nextElement(int nToSearch, ArrayList<Integer> arrList, HashMap<Integer, Boolean> hash)
-	{
-		int nToReturn = 0;
-		
-		for (Integer integer : arrList)
-		{
-			
-		}
-		
-		return nToReturn;
-	}
-	
-	public static ArrayList<Integer> DF (ArrayList<ArrayList<Integer>> arrParams, int nStartNode)
-	{
-		ArrayList<Integer> arrToReturn = new ArrayList<Integer>();
-		HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
-		
-		for (ArrayList<Integer> list : arrParams)
-		{
-			// vizitez pe primul si il adaug la return
-			hash.put(arrParams.indexOf(list) + 1, true);
-			arrToReturn.add(arrParams.indexOf(list));
-			for (Integer integer : list) 
-			{
-				if(hash.containsKey(integer))
-				{
-					if(hash.get(integer))
-					{
-						hash.put(integer, true);
-						arrToReturn.add(integer);
-					}
-				}
-				else
 				{
 					hash.put(integer, true);
 					arrToReturn.add(integer);
 				}
 				
 			}
-			
 		}
 		
 		return arrToReturn;
 	}
-	
 	/**
 	 * @param args
 	 * The input file will contain on the first line the nodes that connect to the first one
@@ -136,7 +55,10 @@ public class Graf
 			Scanner sc = new Scanner(file);
 			ArrayList<ArrayList<Integer>> arrColum = new ArrayList<ArrayList<Integer>>();
 			ArrayList<Integer> arrLine = new ArrayList<Integer>();
+			HashMap<Integer, Boolean> hash = new HashMap<Integer, Boolean>();
+			int nStartNode = sc.nextInt();
 			boolean hasNextLine = sc.hasNextLine();
+			int nCounter = 1;
 			
 			while(hasNextLine)
 			{
@@ -149,17 +71,20 @@ public class Graf
 					temp.add(isRead);
 					isRead = sc.nextInt();
 				}
-				System.out.println("ArrTemp:" + temp);
 				arrLine = temp;
-				System.out.println("Arrline: " + arrLine);
 				arrColum.add(arrLine);
 				System.out.println("ArrColumn" + arrColum);
+				
+				//this initalizes the hash with default value false for all nodes.
+				hash.put(nCounter, false);
+				System.out.println("Hash: " + hash);
+				nCounter ++;
 				hasNextLine = sc.hasNextLine();
 			}
 			
 			sc.close();
 			
-			int nCounter = 1;
+			nCounter = 1;
 			/**
 			 * This prints the graph.
 			 */
@@ -171,7 +96,45 @@ public class Graf
 				System.out.println();
 			}
 			
-			System.out.println(BF(arrColum));
+			//here starts the BF function
+			ArrayList<Integer> arrFirstWave = new ArrayList<Integer>();
+			
+			//maybe the hash value won't be refreshed after the function call here.
+			//In this case, make a forech here.
+			arrFirstWave = BF(arrColum.get(nStartNode - 1), true, hash);
+			arrFirstWave.add(nStartNode);
+			hash.put(nStartNode, true);
+		
+			//This will store the final result
+			ArrayList<Integer> arrFinalResult = new ArrayList<Integer>();
+			arrFinalResult = arrFirstWave;
+			
+			ArrayList<Integer> temp = new ArrayList<Integer>();
+			boolean bContains = true;
+			
+			//after we got the neighbors for the first node, we start the second part of the BF.
+			while(bContains)
+			{	
+				for (Integer integer : arrFirstWave)
+				{
+					temp.clear();
+					temp = BF(arrColum.get(integer - 1), false, hash);
+					for (Integer aux : temp)
+					{
+						arrFinalResult.add(aux);
+						//also if the hash doesn't refresh here, refresh it here manually.
+					}
+				}
+				if(hash.containsValue(false))
+				{
+					arrFirstWave = arrFinalResult;
+				}
+				else
+				{
+					bContains = false;
+				}
+			}
+			System.out.println("Parcurgerea: " + arrFinalResult);
 		}
 		catch (FileNotFoundException ex)
 		{
